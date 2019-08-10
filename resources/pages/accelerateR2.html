@@ -1,0 +1,108 @@
+<!DOCTYPE HTML>
+<!--
+	Solid State by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>accelerateR | Bangor Language Production Lab</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="../../assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="../../assets/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload">
+
+		<!-- Page Wrapper -->
+			<div id="page-wrapper">
+
+				<!-- Header -->
+					<header id="header">
+						<h1><a href="../../index.html">Bangor Language Production Lab</a></h1>
+						<nav>
+							<a href="#menu">Menu</a>
+						</nav>
+					</header>
+
+				<!-- Menu -->
+					<nav id="menu">
+						<div class="inner">
+							<h2>Menu</h2>
+							<ul class="links">
+								<li><a href="../../index.html">Lab home</a></li>
+								<li><a href="../../people.html">People</a></li>
+								<li><a href="../../pubs.html">Outputs</a></li>
+								<li><a href="../../facilities.html">Facilities</a></li>
+								<li><a href="../../resources.html">Resources</a></li>
+								<!-- <li><a href="#">Contact</a></li> -->
+							</ul>
+							<a href="#" class="close">Close</a>
+						</div>
+					</nav>
+
+				<!-- Wrapper -->
+					<section id="wrapper">
+						<header>
+							<div class="inner">
+								<h2>Modding R to use BLAS to better support multicore processing, for faster calculations on MacOS</h2>
+							</div>
+						</header>
+
+						<!-- Content -->
+							<div class="wrapper">
+								<div class="inner">
+
+									<p>R is an excellent tool for statistical analysis and data wrangling, 
+									and its many core and extended functions provide a very useful basis for high-level 
+									programming.  Unfortunately, its actual calculations tend to be quite a bit slower than they could be (e.g. 
+									compared to equivalent calculations in Matlab, Numpy, C++).  Part of the reason is simply that current 
+									distributions of R default to using slower math libraries that do not take advantage
+									of the fact that most modern machines support multicore processing.
+									</p>
+									<p>Microsoft R Open (formerly Revolution R Open) provides R distributions 
+									that use faster math libraries, allowing much faster processing. They 
+									recently stopped supporting MacOS, but most of their performance gains for Mac
+									came from directing R use Mac's own Accelerate math library.
+									</p>
+									<p>The following allowed me to use the faster BLAS, on Mac OS Mojave on 20190614, so I'm posting it here in case it could be of use to others.  It actually makes calculations much faster.</p>
+						
+									<p>According to the guidance <a href="https://cran.r-project.org/bin/macosx/RMacOSX-FAQ.html#Which-BLAS-is-used-and-how-can-it-be-changed_003f">here</a>, after installing <a href="https://mac.r-project.org/">the CRAN-compiled R version</a>, one should simply be able to symlink 
+									<code>> ln -sf /Library/Frameworks/R.framework/Resources/lib/libRblas.vecLib.dylib /Library/Frameworks/R.framework/Resources/lib/libRblas.dylib</code>
+									to use the Accelerate libraries,
+									and 
+									<code>> ln -sf /Library/Frameworks/R.framework/Resources/lib/libRblas.0.dylib /Library/Frameworks/R.framework/Resources/lib/libRblas.dylib</code>
+									to revert to the default BLAS.
+									<p>The problem is that there isn’t actually a libRblas.vecLib.dylib in the specified folder of the latest version, so you need to dig into the Accelerate library to find it and link it from there instead:
+									<code>> ln -sf /System/Library/Frameworks/Accelerate.framework/Frameworks/vecLib.framework/Versions/Current/libBLAS.dylib /Library/Frameworks/R.framework/Resources/lib/libRblas.dylib</code>
+									<p>But then it works fine and can cut the time for some calculations by 85%.</p>
+
+								</div>
+							</div>
+
+					</section>
+
+				<!-- Footer -->
+					<section id="footer">
+						<div class="inner">
+							<ul class="copyright">
+								<li><em>“We die. That may be the meaning of life. But we do [research on] language. That may be the measure of our lives.”</em>― Toni Morrison</li>
+								<br><br>
+
+								<li>&copy; Gary Oppenheim. All rights reserved.</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+							</ul>
+						</div>
+					</section>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="../../assets/js/jquery.min.js"></script>
+			<script src="../../assets/js/jquery.scrollex.min.js"></script>
+			<script src="../../assets/js/browser.min.js"></script>
+			<script src="../../assets/js/breakpoints.min.js"></script>
+			<script src="../../assets/js/util.js"></script>
+			<script src="../../assets/js/main.js"></script>
+
+	</body>
+</html>
